@@ -1,10 +1,17 @@
 import React from "react";
-import "./App.css";
+
+import { Routes, Route, BrowserRouter as Router } from "react-router-dom";
+
+import Index from "./Page/Index";
 
 function App() {
 	return (
-		<div className="App">
-			<h1 className="text-3xl font-bold underline">Hello world!</h1>
+		<div className="App w-full  min-h-screen ">
+			<Router>
+				<Routes>
+					<Route path="/" element={<Index />} />
+				</Routes>
+			</Router>
 		</div>
 	);
 }
