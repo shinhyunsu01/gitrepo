@@ -15,7 +15,6 @@ export default function useApiData(url: string) {
 
 	useEffect(() => {
 		if (!data && !error) {
-			console.log("ddd");
 			setState({ data: {}, isLoading: true });
 		} else if (data && data.items) {
 			setState({ data: data, isLoading: false });

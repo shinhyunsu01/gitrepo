@@ -32,8 +32,8 @@ const Search = () => {
 									<th>Project</th>
 									<th>Watching</th>
 									<th>Forks</th>
-									<th>Stars</th>
 									<th>IssueCount</th>
+									<th>Stars</th>
 									<th></th>
 								</tr>
 							</thead>
@@ -43,9 +43,10 @@ const Search = () => {
 										<td>{item.owner.login}</td>
 										<td>{item.name}</td>
 										<td>{item.watchers_count}</td>
-										<td>{item.watchers_count}</td>
+
 										<td>{item.forks_count}</td>
 										<td>{item.open_issues_count}</td>
+										<td>{item.stargazers_count}</td>
 										<td>
 											<button className="px-4 py-2 bg-[#3d58c1] text-white rounded-md">
 												Add
