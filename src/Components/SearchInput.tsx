@@ -1,12 +1,9 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router";
 import { SearchIcon } from "../Libs/Icon";
-import { useDebounce } from "../Libs/useDebounce";
-import SearchShow from "./SearchShow";
 
 const SearchInput = () => {
 	const [inputWord, setInputWord] = useState("");
-	const [word, setWord] = useState("");
 	const navigate = useNavigate();
 
 	const onSubmit = (event: React.FormEvent) => {
