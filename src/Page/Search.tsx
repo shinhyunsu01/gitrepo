@@ -19,6 +19,7 @@ const Search = () => {
 			console.log(data);
 		}
 	});
+	console.log(searchResult, isLoading);
 
 	return (
 		<>
@@ -57,7 +58,7 @@ const Search = () => {
 								</tbody>
 							))}
 						</table>
-					) : searchResult.items.length === 0 ? (
+					) : searchResult && searchResult.items.length === 0 ? (
 						<div className="w-full h-full flex items-center justify-center font-bold bg-gray-100 rounded-md">
 							<div> 검색 결과 가 없습니다</div>
 						</div>
@@ -116,5 +117,16 @@ export default Search;
 					)}
 				</div>
 			</div>
+
+*/
+/*
+
+!searchResult && searchResult.items ? (
+						<div className="w-full h-full flex items-center justify-center font-bold bg-gray-100 rounded-md">
+							<div> 검색 결과 가 없습니다</div>
+						</div>
+					) : (
+						<Loading />
+					)
 
 */
