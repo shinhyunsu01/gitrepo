@@ -7,7 +7,8 @@ import useApiData from "../Libs/useApiData";
 const Search = () => {
 	const location = useLocation();
 	const [searchResult, setSearchResult] = useState<any>();
-
+	console.log(location);
+	/*
 	const { data, isLoading } = useApiData(
 		`${location.pathname + location.search}`
 	);
@@ -17,12 +18,19 @@ const Search = () => {
 			setSearchResult(data);
 			console.log(data);
 		}
-	});
+	});*/
 
 	return (
 		<>
 			<Navbar />
-			<div className="pt-12">
+		</>
+	);
+};
+
+export default Search;
+/*
+
+<div className="pt-12">
 				<div className="mt-10  h-[calc(100vh-200px)] overflow-y-auto px-4">
 					{searchResult && !isLoading && searchResult.items.length >= 1 ? (
 						<table className="w-full h-full text-center sticky text-sm ">
@@ -65,8 +73,5 @@ const Search = () => {
 					)}
 				</div>
 			</div>
-		</>
-	);
-};
 
-export default Search;
+*/
