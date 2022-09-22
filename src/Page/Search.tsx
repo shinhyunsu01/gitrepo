@@ -7,8 +7,8 @@ import useApiData from "../Libs/useApiData";
 const Search = () => {
 	const location = useLocation();
 	const [searchResult, setSearchResult] = useState<any>();
-	console.log(location);
-	/*
+	//console.log(location);
+
 	const { data, isLoading } = useApiData(
 		`${location.pathname + location.search}`
 	);
@@ -18,7 +18,7 @@ const Search = () => {
 			setSearchResult(data);
 			console.log(data);
 		}
-	});*/
+	});
 
 	return (
 		<>
