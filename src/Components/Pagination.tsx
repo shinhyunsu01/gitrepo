@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
+import { useSWRConfig } from "swr";
 import { LeftArrowIcon, RightArrowIcon } from "../Libs/Icon";
 import { cls } from "../Libs/utils";
 
@@ -65,11 +66,11 @@ const Pagination = ({ url, len }: PaginationType) => {
 					),
 				].map((_, index) => (
 					<button
-						value={index + 1}
+						value={index + 1 + pageNum}
 						onClick={onClick}
 						className={cls(
-							"px-3 py-1 text-center   border rounded-md",
-							index + 1 === +currentIndex[1]
+							"mx-1 px-3 py-1 text-center   border rounded-md",
+							index + 1 + pageNum === +currentIndex[1]
 								? "bg-[#3d58c1] text-white"
 								: "bg-white text-black"
 						)}

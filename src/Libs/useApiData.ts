@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import useSWR from "swr";
+import useSWR, { useSWRConfig } from "swr";
 import { resultTotalType } from "../Types/TotalType";
 
 // `/repos/${owner}/${repo}/issues`,
@@ -11,7 +11,28 @@ interface useApiDataType {
 	isLoading: boolean;
 }
 
+const fetcher = async (url: string) => {
+	const res = await fetch(url, {
+		method: "GET",
+		headers: {
+			Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
+		},
+	});
+
+	if (!res.ok) {
+		const error: any = new Error("[FAIL] fetch data");
+		error.info = await res.json();
+		error.status = res.status;
+		console.log("error", error, res);
+		throw error;
+	}
+
+	return res.json();
+};
+
 export default function useApiData(url: string) {
+	const { cache } = useSWRConfig();
+	console.log(cache);
 	const [state, setState] = useState<useApiDataType>({
 		data: {
 			totalLen: 0,
@@ -20,7 +41,17 @@ export default function useApiData(url: string) {
 		isLoading: true,
 	});
 
-	const { data, error } = useSWR(`${API_URL}${url}`);
+	const { data, error } = useSWR(`${API_URL}${url}`, fetcher, {
+		onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
+			if (retryCount >= 5) return;
+			if (error.status === 403) {
+				cache.delete(`${API_URL}${url}`);
+			}
+
+			// 5초의 간격을 두고 재시도합니다.
+			setTimeout(() => revalidate({ retryCount }), 1000);
+		},
+	});
 
 	useEffect(() => {
 		if (!data && !error) {
