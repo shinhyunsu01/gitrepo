@@ -15,7 +15,7 @@ const fetcher = async (url: string) => {
 	const res = await fetch(url, {
 		method: "GET",
 		headers: {
-			Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
+			Authorization: `Bearer ${process.env.REACT_APP_GITHUB_TOKEN}`,
 		},
 	});
 
@@ -23,7 +23,7 @@ const fetcher = async (url: string) => {
 		const error: any = new Error("[FAIL] fetch data");
 		error.info = await res.json();
 		error.status = res.status;
-		console.log("error", error, res);
+
 		throw error;
 	}
 
@@ -32,7 +32,7 @@ const fetcher = async (url: string) => {
 
 export default function useApiData(url: string) {
 	const { cache } = useSWRConfig();
-	console.log(cache);
+
 	const [state, setState] = useState<useApiDataType>({
 		data: {
 			totalLen: 0,
@@ -47,8 +47,6 @@ export default function useApiData(url: string) {
 			if (error.status === 403) {
 				cache.delete(`${API_URL}${url}`);
 			}
-
-			// 5초의 간격을 두고 재시도합니다.
 			setTimeout(() => revalidate({ retryCount }), 1000);
 		},
 	});
