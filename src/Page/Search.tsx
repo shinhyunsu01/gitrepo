@@ -2,13 +2,15 @@ import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router";
 import Loading from "../Components/Loading";
 import Navbar from "../Components/Navbar";
+import Nothing from "../Components/Nothing";
+import Pagination from "../Components/Pagination";
+import Table from "../Components/Table";
 import useApiData from "../Libs/useApiData";
+import { resultTotalType } from "../Types/TotalType";
 
 const Search = () => {
 	const location = useLocation();
-	const [searchResult, setSearchResult] = useState<any>();
-	//console.log(location);
-
+	const [searchResult, setSearchResult] = useState<resultTotalType>();
 	const { data, isLoading } = useApiData(
 		`${location.pathname + location.search}`
 	);
@@ -16,117 +18,50 @@ const Search = () => {
 	useEffect(() => {
 		if (!isLoading && data) {
 			setSearchResult(data);
-			console.log(data);
 		}
 	});
-	console.log(searchResult, isLoading);
-
+	const titleXArr = [
+		"User",
+		"Project",
+		"Watching",
+		"Forks",
+		"IssueCount",
+		"Stars",
+		"",
+	];
 	return (
 		<>
 			<Navbar />
 			<div className="pt-12">
-				<div className="mt-10  h-[calc(100vh-200px)] overflow-y-auto px-4">
-					{searchResult && !isLoading && searchResult.items.length >= 1 ? (
-						<table className="w-full h-full text-center sticky text-sm ">
-							<thead className=" sticky top-0 z-10 h-14 bg-gray-100 ">
-								<tr>
-									<th>User</th>
-									<th>Project</th>
-									<th>Watching</th>
-									<th>Forks</th>
-									<th>IssueCount</th>
-									<th>Stars</th>
-									<th></th>
-								</tr>
-							</thead>
-							{searchResult.items.map((item: any, i: number) => (
-								<tbody key={i} className="h-14 border-b-2 hover:bg-gray-200">
-									<tr>
-										<td>{item.owner.login}</td>
-										<td>{item.name}</td>
-										<td>{item.watchers_count}</td>
-
-										<td>{item.forks_count}</td>
-										<td>{item.open_issues_count}</td>
-										<td>{item.stargazers_count}</td>
-										<td>
-											<button className="px-4 py-2 bg-[#3d58c1] text-white rounded-md">
-												Add
-											</button>
-										</td>
-									</tr>
-								</tbody>
-							))}
-						</table>
+				<div className="pl-4 mt-6 font-bold text-xl">
+					총{" "}
+					{searchResult?.totalLen
+						.toString()
+						.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}{" "}
+					개
+				</div>
+				<div className="pl-4 mt-2 text-gray-500">
+					# 최대 4개 등록 할수 있습니다
+				</div>
+				<div className="mt-4 w-full h-[calc(100vh-250px)] overflow-y-auto px-6">
+					{!isLoading && searchResult && searchResult.items.length >= 1 ? (
+						<Table
+							titleXArr={titleXArr}
+							dataArr={searchResult.items}
+							saveBtn={true}
+						></Table>
 					) : searchResult && searchResult.items.length === 0 ? (
-						<div className="w-full h-full flex items-center justify-center font-bold bg-gray-100 rounded-md">
-							<div> 검색 결과 가 없습니다</div>
-						</div>
+						<Nothing title="검색 결과 가 없습니다" />
 					) : (
 						<Loading />
 					)}
 				</div>
+				{searchResult && (
+					<Pagination url={"search"} len={searchResult?.totalLen} />
+				)}
 			</div>
 		</>
 	);
 };
 
 export default Search;
-/*
-
-<div className="pt-12">
-				<div className="mt-10  h-[calc(100vh-200px)] overflow-y-auto px-4">
-					{searchResult && !isLoading && searchResult.items.length >= 1 ? (
-						<table className="w-full h-full text-center sticky text-sm ">
-							<thead className=" sticky top-0 z-10 h-14 bg-gray-100 ">
-								<tr>
-									<th>User</th>
-									<th>Project</th>
-									<th>Watching</th>
-									<th>Forks</th>
-									<th>IssueCount</th>
-									<th>Stars</th>
-									<th></th>
-								</tr>
-							</thead>
-							{searchResult.items.map((item: any, i: number) => (
-								<tbody key={i} className="h-14 border-b-2 hover:bg-gray-200">
-									<tr>
-										<td>{item.owner.login}</td>
-										<td>{item.name}</td>
-										<td>{item.watchers_count}</td>
-
-										<td>{item.forks_count}</td>
-										<td>{item.open_issues_count}</td>
-										<td>{item.stargazers_count}</td>
-										<td>
-											<button className="px-4 py-2 bg-[#3d58c1] text-white rounded-md">
-												Add
-											</button>
-										</td>
-									</tr>
-								</tbody>
-							))}
-						</table>
-					) : searchResult.items.length === 0 ? (
-						<div className="w-full h-full flex items-center justify-center font-bold bg-gray-100 rounded-md">
-							<div> 검색 결과 가 없습니다</div>
-						</div>
-					) : (
-						<Loading />
-					)}
-				</div>
-			</div>
-
-*/
-/*
-
-!searchResult && searchResult.items ? (
-						<div className="w-full h-full flex items-center justify-center font-bold bg-gray-100 rounded-md">
-							<div> 검색 결과 가 없습니다</div>
-						</div>
-					) : (
-						<Loading />
-					)
-
-*/
