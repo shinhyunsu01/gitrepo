@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import { useRecoilState } from "recoil";
+import { SaveDataAtom } from "../atom/SaveDataAtom";
 import { cls } from "../Libs/utils";
 import { resultType } from "../Types/TotalType";
 import WarningModal from "./WarningModal";
@@ -12,30 +14,37 @@ interface TableType {
 const Table = ({ titleXArr, dataArr, saveBtn }: TableType) => {
 	const [click, setClick] = useState<any>([]);
 	const [warning, setWarning] = useState(false);
+	const [saveDataAtom, setSaveDataAtom] =
+		useRecoilState<resultType[]>(SaveDataAtom);
 
 	const onClick = (event: React.MouseEvent<HTMLButtonElement>) => {
 		const {
 			currentTarget: { value },
 		} = event;
-		let tmp;
-		const result = click.findIndex(
-			(element: any) =>
-				element.user === dataArr[+value].user &&
-				element.project === dataArr[+value].project
-		);
-
-		if (result === -1) {
-			if (click.length < 4)
-				tmp = click.concat({
-					index: value,
-					user: dataArr[+value].user,
-					project: dataArr[+value].project,
-				});
-			else setWarning(true);
-		} else {
-			tmp = click.filter((_: any, index: number) => index !== result);
-		}
-		if (tmp) setClick(tmp);
+		setSaveDataAtom((oldData) => {
+			const data = oldData.findIndex(
+				(element: resultType) =>
+					element.user === dataArr[+value].user &&
+					element.project === dataArr[+value].project
+			);
+			if (data === -1) {
+				if (oldData.length >= 4) {
+					setWarning(true);
+					return [...oldData];
+				} else {
+					return [...oldData, dataArr[+value]];
+				}
+			} else {
+				const result = oldData.filter(
+					(element) =>
+						!(
+							element.user === dataArr[+value].user &&
+							element.project === dataArr[+value].project
+						)
+				);
+				return [...result];
+			}
+		});
 	};
 
 	useEffect(() => {
@@ -58,28 +67,32 @@ const Table = ({ titleXArr, dataArr, saveBtn }: TableType) => {
 				</thead>
 
 				{dataArr &&
-					dataArr.map((item: any, i: number) => (
-						<tbody key={i} className="h-14 border-b-2 hover:bg-gray-200">
+					dataArr.map((item, index) => (
+						<tbody key={index} className="h-14 border-b-2 hover:bg-gray-200">
 							<tr>
-								{Object.values(item).map((element: any, index: number) => (
+								{Object.values(item).map((element, index) => (
 									<td key={index}>{element}</td>
 								))}
 								{saveBtn && (
 									<td>
 										<button
-											value={i}
+											value={index}
 											onClick={onClick}
 											className={cls(
 												"w-16 px-4 py-2  text-white rounded-md",
-												click.findIndex(
-													(element: any) => i === +element.index
+												saveDataAtom.findIndex(
+													(element: any) =>
+														element.user === dataArr[+index].user &&
+														element.project === dataArr[+index].project
 												) !== -1
 													? "bg-red-400"
 													: "bg-[#3d58c1]"
 											)}
 										>
-											{click.findIndex(
-												(element: any) => i === +element.index
+											{saveDataAtom.findIndex(
+												(element: any) =>
+													element.user === dataArr[+index].user &&
+													element.project === dataArr[+index].project
 											) !== -1
 												? "Del"
 												: "Add"}

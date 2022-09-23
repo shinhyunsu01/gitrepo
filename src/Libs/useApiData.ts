@@ -23,7 +23,6 @@ const fetcher = async (url: string) => {
 		const error: any = new Error("[FAIL] fetch data");
 		error.info = await res.json();
 		error.status = res.status;
-
 		throw error;
 	}
 
@@ -47,6 +46,7 @@ export default function useApiData(url: string) {
 			if (error.status === 403) {
 				cache.delete(`${API_URL}${url}`);
 			}
+
 			setTimeout(() => revalidate({ retryCount }), 1000);
 		},
 	});

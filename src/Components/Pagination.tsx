@@ -33,18 +33,11 @@ const Pagination = ({ url, len }: PaginationType) => {
 			}
 		} else {
 			currentIndex[1] = value;
-			//let url = location.pathname + location.search;
-			//const index = url.indexOf("page=");
-			//const totalurl = url.substring(0, index + 5) + value;
 
 			navigate(location.pathname + currentIndex[0] + "page=" + currentIndex[1]);
-
-			console.log(currentIndex);
 		}
 	};
-	useEffect(() => {
-		console.log("pageNum", pageNum, pageLen, (pageLen - pageNum) % 5);
-	}, [pageNum]);
+
 	return (
 		<div className="mt-10 w-full flex items-center justify-center">
 			<div className="w-[300px] px-2 justify-center items-center flex">
@@ -66,6 +59,7 @@ const Pagination = ({ url, len }: PaginationType) => {
 					),
 				].map((_, index) => (
 					<button
+						key={index}
 						value={index + 1 + pageNum}
 						onClick={onClick}
 						className={cls(
