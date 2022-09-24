@@ -13,12 +13,13 @@ import { resultType } from "../Types/TotalType";
 const Index = () => {
 	const [saveDataAtom, setSaveDataAtom] =
 		useRecoilState<resultType[]>(SaveDataAtom);
+	console.log(saveDataAtom);
 	return (
 		<div>
 			<Navbar />
 			<div className="pt-16">
 				<div className=" md:h-[calc(100vh-200px)] overflow-y-auto px-4">
-					{saveDataAtom === null ? (
+					{saveDataAtom.length === 0 ? (
 						<Nothing title="저장된 데이터 가 없습니다" />
 					) : (
 						<div className="w-full flex items-center flex-wrap justify-center  ">
