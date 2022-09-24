@@ -14,7 +14,7 @@ const Card = ({ item }: CardType) => {
 			to={`/repos/${item.user}/${item.project}/issues?&state=open&page=1`}
 			className="rounded-md border w-44 h-56 m-4 p-4"
 		>
-			<div className="flex items-center justify-center font-bold border-b-2">
+			<div className="flex items-center justify-center font-bold mb-2 border-b-2">
 				{item.userAvatar ? (
 					<img className="rounded-full w-12 mr-2" src={item.userAvatar} />
 				) : (
@@ -22,7 +22,7 @@ const Card = ({ item }: CardType) => {
 				)}
 				<div>{item.user}</div>
 			</div>
-			<div className="font-bold">{`${item.user} / ${item.project}`}</div>
+			<div className="font-bold ">{`${item.user} / ${item.project}`}</div>
 			<br />
 
 			<div className="flex items-center justify-center">
