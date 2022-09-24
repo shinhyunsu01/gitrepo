@@ -2,36 +2,14 @@ import { useEffect, useState } from "react";
 import useSWR, { useSWRConfig } from "swr";
 import { resultTotalType } from "../Types/TotalType";
 
-// `/repos/${owner}/${repo}/issues`,
-// /search/repositories?q=${word}&page=1
-const API_URL = "https://api.github.com";
+export const API_URL = "https://api.github.com";
 
 interface useApiDataType {
 	data: resultTotalType;
 	isLoading: boolean;
 }
 
-const fetcher = async (url: string) => {
-	const res = await fetch(url, {
-		method: "GET",
-		headers: {
-			Authorization: `Bearer ${process.env.REACT_APP_GITHUB_TOKEN}`,
-		},
-	});
-
-	if (!res.ok) {
-		const error: any = new Error("[FAIL] fetch data");
-		error.info = await res.json();
-		error.status = res.status;
-		throw error;
-	}
-
-	return res.json();
-};
-
 export default function useApiData(url: string) {
-	const { cache } = useSWRConfig();
-
 	const [state, setState] = useState<useApiDataType>({
 		data: {
 			totalLen: 0,
@@ -40,16 +18,7 @@ export default function useApiData(url: string) {
 		isLoading: true,
 	});
 
-	const { data, error } = useSWR(`${API_URL}${url}`, fetcher, {
-		onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
-			if (retryCount >= 5) return;
-			if (error.status === 403) {
-				cache.delete(`${API_URL}${url}`);
-			}
-
-			setTimeout(() => revalidate({ retryCount }), 1000);
-		},
-	});
+	const { data, error } = useSWR(`${API_URL}${url}`);
 
 	useEffect(() => {
 		if (!data && !error) {
@@ -60,7 +29,7 @@ export default function useApiData(url: string) {
 				},
 				isLoading: true,
 			});
-		} else if (data && data.items) {
+		} else if (data) {
 			let objMake;
 			if (url.includes("search")) {
 				objMake = data.items.map((element: any) => {
@@ -72,9 +41,12 @@ export default function useApiData(url: string) {
 					ele.forks = element.forks_count;
 					ele.issuecount = element.open_issues_count;
 					ele.stars = element.stargazers_count;
+					ele.userAvatar = element.owner.avatar_url;
 
 					return ele;
 				});
+			} else if (url.includes("repos")) {
+				console.log("1", data);
 			}
 			setState({
 				data: { totalLen: data.total_count, items: objMake },

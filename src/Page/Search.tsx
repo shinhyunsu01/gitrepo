@@ -6,6 +6,7 @@ import Nothing from "../Components/Nothing";
 import Pagination from "../Components/Pagination";
 import Table from "../Components/Table";
 import useApiData from "../Libs/useApiData";
+import { threeDigit } from "../Libs/utils";
 import { resultTotalType } from "../Types/TotalType";
 
 const Search = () => {
@@ -32,13 +33,9 @@ const Search = () => {
 	return (
 		<>
 			<Navbar />
-			<div className="pt-12">
+			<div className="pt-16">
 				<div className="pl-4 mt-6 font-bold text-xl">
-					총{" "}
-					{searchResult?.totalLen
-						.toString()
-						.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}{" "}
-					개
+					총 {threeDigit(searchResult?.totalLen || 0)} 개
 				</div>
 				<div className="pl-4 mt-2 text-gray-500">
 					# 최대 4개 등록 할수 있습니다

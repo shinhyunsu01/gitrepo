@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import { SaveDataAtom } from "../atom/SaveDataAtom";
+import { saveLocal } from "../Libs/localStorageUtil";
 import { cls } from "../Libs/utils";
 import { resultType } from "../Types/TotalType";
 import WarningModal from "./WarningModal";
@@ -12,7 +13,6 @@ interface TableType {
 }
 
 const Table = ({ titleXArr, dataArr, saveBtn }: TableType) => {
-	const [click, setClick] = useState<any>([]);
 	const [warning, setWarning] = useState(false);
 	const [saveDataAtom, setSaveDataAtom] =
 		useRecoilState<resultType[]>(SaveDataAtom);
@@ -21,12 +21,14 @@ const Table = ({ titleXArr, dataArr, saveBtn }: TableType) => {
 		const {
 			currentTarget: { value },
 		} = event;
+
 		setSaveDataAtom((oldData) => {
 			const data = oldData.findIndex(
 				(element: resultType) =>
 					element.user === dataArr[+value].user &&
 					element.project === dataArr[+value].project
 			);
+
 			if (data === -1) {
 				if (oldData.length >= 4) {
 					setWarning(true);
@@ -48,6 +50,10 @@ const Table = ({ titleXArr, dataArr, saveBtn }: TableType) => {
 	};
 
 	useEffect(() => {
+		saveLocal(saveDataAtom);
+	}, [saveDataAtom]);
+
+	useEffect(() => {
 		const setTimeoutId = setTimeout(() => {
 			setWarning(false);
 		}, 500);
@@ -66,11 +72,19 @@ const Table = ({ titleXArr, dataArr, saveBtn }: TableType) => {
 					</tr>
 				</thead>
 
-				{dataArr &&
+				{saveBtn &&
+					dataArr &&
 					dataArr.map((item, index) => (
 						<tbody key={index} className="h-14 border-b-2 hover:bg-gray-200">
 							<tr>
-								{Object.values(item).map((element, index) => (
+								{[
+									item.user,
+									item.project,
+									item.watching,
+									item.forks,
+									item.issuecount,
+									item.stars,
+								].map((element, index) => (
 									<td key={index}>{element}</td>
 								))}
 								{saveBtn && (

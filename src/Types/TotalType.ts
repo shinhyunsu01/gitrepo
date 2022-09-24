@@ -5,6 +5,7 @@ export interface resultType {
 	forks: number;
 	issuecount: number;
 	stars: number;
+	userAvatar: string;
 }
 
 export interface resultTotalType {
