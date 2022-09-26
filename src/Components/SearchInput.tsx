@@ -20,7 +20,7 @@ const SearchInput = () => {
 			</div>
 			<input
 				className="w-full rounded-md  border appearance-none pl-8 py-2 focus:ring-2 focus:ring-offset-2 focus:outline-none  focus:ring-[#3d58c1] "
-				placeholder="Search Repository"
+				placeholder="Search"
 				onChange={(event) => setInputWord(event.currentTarget.value)}
 			/>
 		</form>
