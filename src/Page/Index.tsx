@@ -5,15 +5,12 @@ import { SaveDataAtom } from "../atom/SaveDataAtom";
 import Card from "../Components/Card";
 import Navbar from "../Components/Navbar";
 import Nothing from "../Components/Nothing";
-import { ForkIcon, StarIcon, WatchIcon } from "../Libs/Icon";
-import { getLocal } from "../Libs/localStorageUtil";
-import { API_URL } from "../Libs/useApiData";
 import { resultType } from "../Types/TotalType";
 
 const Index = () => {
 	const [saveDataAtom, setSaveDataAtom] =
 		useRecoilState<resultType[]>(SaveDataAtom);
-	console.log(saveDataAtom);
+
 	return (
 		<div>
 			<Navbar />

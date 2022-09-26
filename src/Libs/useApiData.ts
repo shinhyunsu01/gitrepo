@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import useSWR, { useSWRConfig } from "swr";
+import useSWR from "swr";
 import { resultTotalType } from "../Types/TotalType";
 
 export const API_URL = "https://api.github.com";
@@ -45,13 +45,27 @@ export default function useApiData(url: string) {
 
 					return ele;
 				});
-			} else if (url.includes("repos")) {
-				console.log("1", data);
+
+				setState({
+					data: { totalLen: data.total_count, items: objMake },
+					isLoading: false,
+				});
+			} else if (url.includes("issues")) {
+				console.log("cc", data);
+				objMake = data.map((element: any) => {
+					let ele: any = {};
+
+					ele.url = element.html_url;
+					ele.title = element.title;
+					ele.updatetime = element.updated_at;
+					ele.labels = element.labels.map((ele: any) => ele.name);
+					return ele;
+				});
+				setState({
+					data: { totalLen: 0, items: objMake },
+					isLoading: false,
+				});
 			}
-			setState({
-				data: { totalLen: data.total_count, items: objMake },
-				isLoading: false,
-			});
 		}
 	}, [data, error]);
 

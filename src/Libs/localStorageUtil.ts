@@ -1,5 +1,5 @@
-export const saveLocal = (data: any) => {
-	localStorage.setItem("gitRepo", JSON.stringify(data));
+export const saveLocal = (key: string, data: any) => {
+	localStorage.setItem(key, JSON.stringify(data));
 };
 
 export const getLocal = (key: string) => {

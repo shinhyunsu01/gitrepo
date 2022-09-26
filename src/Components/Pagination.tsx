@@ -5,11 +5,10 @@ import { LeftArrowIcon, RightArrowIcon } from "../Libs/Icon";
 import { cls } from "../Libs/utils";
 
 interface PaginationType {
-	url: string;
 	len: number;
 }
 
-const Pagination = ({ url, len }: PaginationType) => {
+const Pagination = ({ len }: PaginationType) => {
 	const pageLen = Math.ceil(len / 30);
 	const [pageNum, setpageNum] = useState(0);
 	const location = useLocation();
@@ -55,7 +54,7 @@ const Pagination = ({ url, len }: PaginationType) => {
 							? pageLen - pageNum <= 5
 								? pageLen - pageNum
 								: 5
-							: pageNum
+							: pageLen - pageNum
 					),
 				].map((_, index) => (
 					<button

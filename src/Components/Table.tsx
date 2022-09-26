@@ -1,56 +1,29 @@
 import React, { useEffect, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import { SaveDataAtom } from "../atom/SaveDataAtom";
+import { CloseIcon, OpenIcon } from "../Libs/Icon";
 import { saveLocal } from "../Libs/localStorageUtil";
-import { cls } from "../Libs/utils";
+import { agoTime, cls } from "../Libs/utils";
 import { resultType } from "../Types/TotalType";
+import OptionBtn from "./OptionBtn";
 import WarningModal from "./WarningModal";
 
 interface TableType {
 	titleXArr: string[];
-	dataArr: resultType[];
-	saveBtn: boolean;
+	dataArr: any[];
+	optionSaveBtn: boolean;
 }
 
-const Table = ({ titleXArr, dataArr, saveBtn }: TableType) => {
+const Table = ({ titleXArr, dataArr, optionSaveBtn }: TableType) => {
+	const location = useLocation();
 	const [warning, setWarning] = useState(false);
+	const urlState = location.search.indexOf("open") !== -1 ? "open" : "closed";
 	const [saveDataAtom, setSaveDataAtom] =
 		useRecoilState<resultType[]>(SaveDataAtom);
 
-	const onClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-		const {
-			currentTarget: { value },
-		} = event;
-
-		setSaveDataAtom((oldData) => {
-			const data = oldData.findIndex(
-				(element: resultType) =>
-					element.user === dataArr[+value].user &&
-					element.project === dataArr[+value].project
-			);
-
-			if (data === -1) {
-				if (oldData.length >= 4) {
-					setWarning(true);
-					return [...oldData];
-				} else {
-					return [...oldData, dataArr[+value]];
-				}
-			} else {
-				const result = oldData.filter(
-					(element) =>
-						!(
-							element.user === dataArr[+value].user &&
-							element.project === dataArr[+value].project
-						)
-				);
-				return [...result];
-			}
-		});
-	};
-
 	useEffect(() => {
-		saveLocal(saveDataAtom);
+		saveLocal("gitRepo", saveDataAtom);
 	}, [saveDataAtom]);
 
 	useEffect(() => {
@@ -62,57 +35,72 @@ const Table = ({ titleXArr, dataArr, saveBtn }: TableType) => {
 
 	return (
 		<>
-			{saveBtn && warning && <WarningModal title={"4개 초과 되었습니다"} />}
-			<table className=" w-full h-full text-center  text-sm ">
-				<thead className=" sticky top-0 z-10 h-14 bg-gray-100 ">
-					<tr>
+			{optionSaveBtn && warning && (
+				<WarningModal title={"4개 초과 되었습니다"} />
+			)}
+			<table className=" w-full  text-sm ">
+				<thead
+					className={cls(
+						"sticky top-0 z-10 h-14 bg-gray-100  border-collapse md:text-lg",
+						titleXArr.length >= 4 ? "text-center" : "text-left"
+					)}
+				>
+					<tr className="">
 						{titleXArr.map((element, index) => (
-							<th key={index}>{element}</th>
+							<th className="pl-4" key={index}>
+								{element}
+							</th>
 						))}
 					</tr>
 				</thead>
 
-				{saveBtn &&
-					dataArr &&
+				{dataArr &&
 					dataArr.map((item, index) => (
-						<tbody key={index} className="h-14 border-b-2 hover:bg-gray-200">
+						<tbody
+							key={index}
+							className="h-16 border-b-2 hover:bg-gray-200 text-center"
+						>
 							<tr>
-								{[
-									item.user,
-									item.project,
-									item.watching,
-									item.forks,
-									item.issuecount,
-									item.stars,
-								].map((element, index) => (
-									<td key={index}>{element}</td>
-								))}
-								{saveBtn && (
-									<td>
-										<button
-											value={index}
-											onClick={onClick}
-											className={cls(
-												"w-16 px-4 py-2  text-white rounded-md",
-												saveDataAtom.findIndex(
-													(element: any) =>
-														element.user === dataArr[+index].user &&
-														element.project === dataArr[+index].project
-												) !== -1
-													? "bg-red-400"
-													: "bg-[#3d58c1]"
-											)}
-										>
-											{saveDataAtom.findIndex(
-												(element: any) =>
-													element.user === dataArr[+index].user &&
-													element.project === dataArr[+index].project
-											) !== -1
-												? "Del"
-												: "Add"}
-										</button>
-									</td>
-								)}
+								{optionSaveBtn &&
+									[
+										item.user,
+										item.project,
+										item.watching,
+										item.forks,
+										item.issuecount,
+										item.stars,
+									].map((element: any, index) => (
+										<td key={index}>{element}</td>
+									))}
+
+								<td>
+									{optionSaveBtn && (
+										<OptionBtn
+											warningHandler={setWarning}
+											currentData={dataArr[+index]}
+											value={
+												dataArr[+index].user + "/" + dataArr[+index].project
+											}
+										/>
+									)}
+
+									{!optionSaveBtn && (
+										<a target="_blank" href={item.url}>
+											<div className="flex ">
+												{urlState === "open" ? (
+													<OpenIcon addClassName="text-[#3d58c1] mr-4" />
+												) : (
+													<CloseIcon addClassName="text-green-500 mr-4" />
+												)}
+												<div className="font-bold">{item.title}</div>
+											</div>
+
+											<div className="text-gray-500 text-left">
+												{agoTime(item.updatetime)}
+											</div>
+										</a>
+									)}
+								</td>
 							</tr>
 						</tbody>
 					))}

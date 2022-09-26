@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useLocation } from "react-router";
 import Loading from "../Components/Loading";
 import Navbar from "../Components/Navbar";
@@ -16,11 +16,16 @@ const Search = () => {
 		`${location.pathname + location.search}`
 	);
 
-	useEffect(() => {
+	const filterData = useCallback(() => {
 		if (!isLoading && data) {
-			setSearchResult(data);
+			setSearchResult({ totalLen: data.totalLen, items: data.items });
 		}
-	});
+	}, [data, isLoading]);
+
+	useEffect(() => {
+		filterData();
+	}, [filterData]);
+
 	const titleXArr = [
 		"User",
 		"Project",
@@ -45,7 +50,7 @@ const Search = () => {
 						<Table
 							titleXArr={titleXArr}
 							dataArr={searchResult.items}
-							saveBtn={true}
+							optionSaveBtn={true}
 						></Table>
 					) : searchResult && searchResult.items.length === 0 ? (
 						<Nothing title="검색 결과 가 없습니다" />
@@ -53,9 +58,7 @@ const Search = () => {
 						<Loading />
 					)}
 				</div>
-				{searchResult && (
-					<Pagination url={"search"} len={searchResult?.totalLen} />
-				)}
+				{searchResult && <Pagination len={searchResult?.totalLen} />}
 			</div>
 		</>
 	);

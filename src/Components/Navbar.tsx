@@ -14,7 +14,7 @@ const Navbar = () => {
 
 			<div className="flex justify-end items-center">
 				<Link to="/" className="px-4 py-2 bg-[#3d58c1] text-white rounded-md">
-					Store
+					Home
 				</Link>
 			</div>
 		</header>
