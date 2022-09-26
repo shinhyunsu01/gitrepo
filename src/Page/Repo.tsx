@@ -19,12 +19,21 @@ const Repo = () => {
 	const { data, isLoading } = useApiData(
 		`${location.pathname + location.search}`
 	);
+	const urlTitle = location.pathname.split("/");
 	const [totalIssue, setTotalIssue] = useState<number>(0);
 	const [issueData, setIssueData] = useState<resultIssuesType>();
 
 	const filterData = useCallback(() => {
 		if (!isLoading && data) {
-			setIssueData({ totalLen: totalIssue, items: data.items as any });
+			const dataAtom = saveDataAtom.filter(
+				(element) =>
+					element.user === urlTitle[2] && element.project === urlTitle[3]
+			);
+			console.log("dataAtom", dataAtom[0]);
+			setIssueData({
+				totalLen: dataAtom[0].issuecount,
+				items: data.items as any,
+			});
 		}
 	}, [data, isLoading]);
 
@@ -38,7 +47,7 @@ const Repo = () => {
 		<>
 			<Navbar />
 			<div className="pt-16">
-				<OpenCloseBtn totalLen={totalIssue} />
+				<OpenCloseBtn totalLen={issueData?.totalLen || 0} />
 
 				<div className="mt-4 w-full h-[calc(100vh-250px)] overflow-y-auto px-6">
 					{!isLoading && issueData && issueData.items.length >= 1 ? (
@@ -53,7 +62,7 @@ const Repo = () => {
 						<Loading />
 					)}
 				</div>
-				<Pagination len={totalIssue ? totalIssue : 1} />
+				<Pagination len={issueData?.totalLen || 1} />
 			</div>
 		</>
 	);
