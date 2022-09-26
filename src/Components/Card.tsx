@@ -1,4 +1,4 @@
-import React,  from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import { SaveDataAtom } from "../atom/SaveDataAtom";

@@ -7,3 +7,7 @@
   - [x] issue / Repository 명이 표현 되어야 한다
   - [x] issue 클릭 상세 페이지 이동
   - [x] 페이지네이션 구현
+
+## 모바일/PC 대응
+
+![ezgif com-gif-maker](https://user-images.githubusercontent.com/84579582/192280679-d3949ce4-507a-4b7f-b609-d8d893526e1b.gif)
