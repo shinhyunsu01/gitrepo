@@ -15,7 +15,7 @@ const Index = () => {
 		<div>
 			<Navbar />
 			<div className="pt-16">
-				<div className=" md:h-[calc(100vh-200px)] overflow-y-auto px-4">
+				<div className="h-screen sm:h-[calc(100vh-200px)] overflow-y-auto px-4">
 					{saveDataAtom.length === 0 ? (
 						<Nothing title="저장된 데이터 가 없습니다" />
 					) : (
