@@ -86,13 +86,15 @@ const Table = ({ titleXArr, dataArr, optionSaveBtn }: TableType) => {
 
 									{!optionSaveBtn && (
 										<a target="_blank" href={item.url}>
-											<div className="flex ">
+											<div className="flex truncate w-80 sm:w-full">
 												{urlState === "open" ? (
 													<OpenIcon addClassName="text-[#3d58c1] mr-4" />
 												) : (
 													<CloseIcon addClassName="text-green-500 mr-4" />
 												)}
-												<div className="font-bold">{item.title}</div>
+												<div className=" font-bold text-ellipsis overflow-hidden">
+													{item.title}
+												</div>
 											</div>
 
 											<div className="text-gray-500 text-left">
